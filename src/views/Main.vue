@@ -13,7 +13,9 @@
 
         <!-- content  here  -->
         <div class="flex-1 bg-gray-50 p-4">
-          <router-view/>
+          <transition name="slide">
+            <router-view></router-view>
+          </transition>
         </div>
         <!-- content  here  -->
       </div>
