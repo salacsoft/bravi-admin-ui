@@ -25,7 +25,11 @@ const AuthStore = {
     },
     actions: {
         setUserToken: ({commit}, token) =>  commit("setUserToken", token),
-        setUserDetails: ({commit}, user) => commit("setUserDetails", user)
+        setUserDetails: ({commit}, user) => commit("setUserDetails", user),
+        clearUserToken: ({commit}) => {
+            commit("clearUserToken");
+            commit("clearUserDetails");
+        }
      },
     getters:{
         getUserToken(state){

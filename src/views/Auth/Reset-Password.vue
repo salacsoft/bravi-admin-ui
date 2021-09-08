@@ -92,14 +92,17 @@
 <script>
 
 import {reactive } from 'vue';
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { API } from '@/API/axios-instance';
+import ErrorHandler from '@/API/ErrorHandler';
+import { createToast } from 'mosha-vue-toastify';
 
 export default {
 
     setup () {
 
         const route = useRoute();
+        const router = useRouter();
         const productName = process.env.VUE_APP_NAME
         const copyright = process.env.VUE_APP_COPYRIGHT
 
@@ -114,10 +117,19 @@ export default {
         const resetPassword = () => {
             API.post("/reset-password", user)
                 .then(response => {
-
+                    createToast({title: "Password successfuly updated",  description: response.data.message}, 
+                        {type: "success", timeout: 3000, 
+                        onClose: function() {
+                            router.push({name: "Login"});
+                        }
+                    });
+                   
                 })
-                .catch(error => {
-
+                .catch(errors => {
+                    const error = ErrorHandler(errors);
+                    console.log("error", error);
+                    createToast(error, {type: "danger", timeout: 10000})
+                    console.log(error.description);
                 });
         }
 

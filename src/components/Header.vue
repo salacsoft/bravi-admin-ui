@@ -16,7 +16,7 @@
             </button>
          </div>
          <div>
-            <button title="Click to logout" class="border-2 rounded-2xl border-white p-2">
+            <button @click="logOut" title="Click to logout" class="border-2 rounded-2xl border-white p-2">
                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white " fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                </svg>
@@ -27,11 +27,33 @@
 </template>
 
 <script>
+import {useStore} from 'vuex';
+import { API } from '@/API/axios-instance';
+import { createToast } from 'mosha-vue-toastify';
+import { useRouter } from 'vue-router'
+
 export default {
    setup () {
+      const store = useStore();
+      const router = useRouter();
       
+      const logOut = () => {
+         API.post("v1/logout").then(response => {
+                createToast("Thank you ", {type: "success"})
+                store.dispatch("clearUserToken");
+                router.push({name: "Login"});
+            }).catch( error =>   {
+                if (error.response.status == 401) {
+                     store.dispatch("clearUserToken");
+                     router.push({name: "Login"});
+                }
+            });
+            
+      }
 
-      return {}
+      return {
+         logOut
+      }
    }
 }
 </script>

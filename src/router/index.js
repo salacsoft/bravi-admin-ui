@@ -58,10 +58,8 @@ router.beforeEach((to, from, next) => {
   const user = store.getters.getUserDetails;
   if (to.name !== 'Login'  && to.name !== 'ResetPassword' && to.name !== 'ForgotPassword' && !isAuthenticated) next({ name: 'Login' })
   else {
-    if(to.name == 'Login' && isAuthenticated) {
-      next({ name: 'Main' })
-    }
-    next()
+    if(to.name == 'Login' && isAuthenticated) next({ name: 'Main' })
+    else next()
   }
 });
 

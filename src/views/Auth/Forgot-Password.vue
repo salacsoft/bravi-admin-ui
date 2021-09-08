@@ -26,10 +26,12 @@
                             <label for="Enter your email address">Enter your email address</label>
                             <div class="flex bg-white rounded-xl px-3 py-1 shadow-md mt-2">
                                 <div class="flex w-full bg-white rounded-xl py-1 px-2" >
-                                    <input type="text" 
+                                    <input type="email" 
+                                        v-model="user.email"
                                         id="email"
                                         placeholder="Enter your email address"
                                         class="w-full rounded-l-lg  focus:outline-none"
+                                        required
                                     >
                                     <span>
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 " viewBox="0 0 20 20" fill="currentColor">
@@ -62,6 +64,8 @@
 
 import {reactive } from 'vue';
 import { API } from '@/API/axios-instance';
+import ErrorHandler from '@/API/ErrorHandler';
+import { createToast } from 'mosha-vue-toastify';
 
 export default {
     setup () {
@@ -73,13 +77,16 @@ export default {
             url: process.env.VUE_APP_BASE_URL + "/reset-password"
         });
         
-        const resetPassword = () => {
+        const forgotPassword = () => {
             API.post("/forgot-password", user)
                 .then(response => {
-                    console.log("error", response);
+                    console.log(response);
+                    createToast({title: "Email Sent",  description: response.data.message ?? "We sent Reset link to your email please check it."}, {type: "success", timeout: 5000})
                 })
-                .catch(error => {
-                    console.log("error", error)
+                .catch(errors => {
+                    const error = ErrorHandler(errors);
+                    createToast(error, {type: "danger", timeout: 10000})
+                    console.log(error.description);
                 });
         }
 
@@ -87,7 +94,7 @@ export default {
             productName,
             copyright,
             user,
-            resetPassword
+            forgotPassword
         }
     }
 }

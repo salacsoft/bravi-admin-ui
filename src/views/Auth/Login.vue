@@ -104,7 +104,7 @@ export default {
             API.post("/login", credential).then(response => {
                 let data = response.data;
                 let msg = data.message;
-                createToast(msg, {type: "success"})
+                createToast("Welcome " + data.data.full_name, {type: "success"})
 
                 const {email, full_name, uuid, user_uuid, user_id} = data.data;
                 

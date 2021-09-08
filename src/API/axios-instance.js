@@ -5,7 +5,7 @@ import store from '@/store';
 export const instance =  axios.create({
   baseURL: process.env.VUE_APP_API_URL,
   headers: {
-    "Content-type": "application/json"
+    "X-Requested-With": "XMLHttpRequest"
   }
 });
 
