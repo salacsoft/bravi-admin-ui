@@ -1,39 +1,35 @@
 <template>
   <div class="relative min-h-screen flex">
-      <!-- sidebar -->
-        <sidebar />
-      <!-- sidebar end -->
+    <!-- sidebar -->
+    <sidebar />
+    <!-- sidebar end -->
 
-      <!-- container -->
-      <div class="flex flex-col content w-full">
+    <!-- container -->
+    <div class="flex flex-col content w-full">
+      <!-- top nav -->
+      <topnav />
+      <!-- top nav end -->
 
-        <!-- top nav -->
-         <topnav />
-        <!-- top nav end -->
-
-        <!-- content  here  -->
-        <div class="flex-1 bg-gray-50 p-4">
-          <transition name="slide">
-            <router-view></router-view>
-          </transition>
-        </div>
-        <!-- content  here  -->
+      <!-- content  here  -->
+      <div class="flex-1 bg-gray-50 p-4">
+        <router-view></router-view>
       </div>
-      <!-- container end -->
-      
+      <!-- content  here  -->
+    </div>
+    <!-- container end -->
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import sidebar from '@/components/Sidebar.vue'
-import topnav from '@/components/Header.vue'
+import sidebar from "@/components/Sidebar.vue";
+import topnav from "@/components/Header.vue";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
     sidebar,
-    topnav
-  }
-}
+    topnav,
+  },
+};
 </script>

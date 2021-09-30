@@ -10,6 +10,7 @@
     "audit": "0.0.6",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "daisyui": "^1.14.1",
     "dotenv": "^10.0.0",
     "fix": "0.0.6",
     "mosha-vue-toastify": "^1.0.21",
@@ -29,6 +30,7 @@
     "@vue/compiler-sfc": "^3.0.0",
     "autoprefixer": "9",
     "postcss": "7",
+    "sass-loader": "^12.1.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat"
   }
 }

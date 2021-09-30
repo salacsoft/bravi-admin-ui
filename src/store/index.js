@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import AuthStore from './auth';
+import ClientStore from './clients';
 import createPersistedState from "vuex-persistedstate";
 
 // import SecureLS from "secure-ls";
@@ -8,7 +9,8 @@ import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
   modules: {
-    AuthStore
+    AuthStore,
+    ClientStore
   },
   plugins: [createPersistedState({
     storage: {

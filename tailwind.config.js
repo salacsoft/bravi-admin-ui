@@ -5,7 +5,7 @@ module.exports = {
     extend: {
       transitionProperty: {
         'width': 'width'
-    },
+      },
     },
   },
   variants: {
@@ -14,5 +14,7 @@ module.exports = {
       textColor: ['active'],
     },
   },
-  plugins: [],
+  plugins: [
+    require('daisyui'),
+  ],
 }
