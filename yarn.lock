@@ -3130,7 +3130,7 @@ cyclist@^1.0.1:
 
 daisyui@^1.14.1:
   version "1.14.1"
-  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-1.14.1.tgz#8f67bf72034e2c4f56a170c072ca23810ecb3d52"
+  resolved "https://registry.npmjs.org/daisyui/-/daisyui-1.14.1.tgz"
   integrity sha512-Ou+rAJAcDByUDIcHfBWCv6o9dBUVAyZBJUIoBXR/c+o7kZIkGcR15JPIw6LJmyojhJP594xnuXNIe0I+fcQ+3A==
 
 dashdash@^1.12.0:
@@ -5193,7 +5193,7 @@ kind-of@^6.0.0, kind-of@^6.0.2:
 
 klona@^2.0.4:
   version "2.0.4"
-  resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.4.tgz#7bb1e3affb0cb8624547ef7e8f6708ea2e39dfc0"
+  resolved "https://registry.npmjs.org/klona/-/klona-2.0.4.tgz"
   integrity sha512-ZRbnvdg/NxqzC7L9Uyqzf4psi1OM4Cuc+sJAkQPjO6XkQIJTNbfK2Rsmbw8fx1p2mkZdp2FZYo2+LwXYY/uwIA==
 
 launch-editor-middleware@^2.2.1:
@@ -7268,7 +7268,7 @@ safe-regex@^1.1.0:
 
 sass-loader@^12.1.0:
   version "12.1.0"
-  resolved "https://registry.yarnpkg.com/sass-loader/-/sass-loader-12.1.0.tgz#b73324622231009da6fba61ab76013256380d201"
+  resolved "https://registry.npmjs.org/sass-loader/-/sass-loader-12.1.0.tgz"
   integrity sha512-FVJZ9kxVRYNZTIe2xhw93n3xJNYZADr+q69/s98l9nTCrWASo+DR2Ot0s5xTKQDDEosUkatsGeHxcH4QBp5bSg==
   dependencies:
     klona "^2.0.4"
@@ -8600,7 +8600,7 @@ webpack-sources@^1.1.0, webpack-sources@^1.4.0, webpack-sources@^1.4.1:
 
 webpack@^4.0.0:
   version "4.46.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.46.0.tgz#bf9b4404ea20a073605e0a011d188d77cb6ad542"
+  resolved "https://registry.npmjs.org/webpack/-/webpack-4.46.0.tgz"
   integrity sha512-6jJuJjg8znb/xRItk7bkT0+Q7AHCYjjFnvKIWQPkNIOyRqoCGvkOs0ipeQzrqz4l5FtN5ZI/ukEHroeX/o1/5Q==
   dependencies:
     "@webassemblyjs/ast" "1.9.0"

@@ -23,19 +23,10 @@ const ClientStore = {
 
    },
    actions: {
-
-      getListOfClients: ({ commit }) => {
-         API.get("/v1/clients?paginate=10")
-            .then(response => {
-               console.log("response", response.data.data);
-               commit("setList", response.data.data);
-               commit("setMeta", response.data.meta);
-               commit("setLinks", response.data.links);
-            })
-            .catch(errors => {
-               console.log("erroes", errors.response.data);
-               commit("setErrors", errors);
-            })
+      loadList: ({ commit }, payload) => {
+         commit("setList", payload.data);
+         commit("setMeta", payload.meta);
+         commit("setLinks", payload.links);
       }
    },
    getters: {

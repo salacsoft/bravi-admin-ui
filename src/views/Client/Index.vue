@@ -16,29 +16,7 @@
         </svg>
         Client List
       </h2>
-      <div class="flex w-2/6 bg-white rounded-xl h-10 py-2 px-2 shadow-md">
-        <input
-          type="text"
-          id="email"
-          placeholder="Search Client"
-          class="w-full rounded-l-lg px-2 py-2 focus:outline-none"
-          required
-        />
-        <span class="flex items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-gray-400"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </span>
-      </div>
+      <search-input @search="searchClient" placeholder="search client" />
     </div>
 
     <div class="flex flex-col mt-8">
@@ -56,7 +34,29 @@
         >
           <table class="min-w-full">
             <thead>
-              <tr>
+              <tr class="bg-yellow-600">
+                <th
+                  class="
+                    px-6
+                    py-3
+                    text-xs
+                    font-medium
+                    leading-4
+                    tracking-wider
+                    text-left text-white
+                    uppercase
+                    border-b border-gray-200
+                  "
+                >
+                  <label>
+                    <input
+                      type="checkbox"
+                      class="checkbox bg-white"
+                      @change="selectAll($event)"
+                      id="selectAll"
+                    />
+                  </label>
+                </th>
                 <th
                   v-for="title in headers"
                   :key="title"
@@ -70,7 +70,6 @@
                     text-left text-white
                     uppercase
                     border-b border-gray-200
-                    bg-gray-700
                   "
                 >
                   {{ title }}
@@ -86,7 +85,6 @@
                     text-left text-white
                     uppercase
                     border-b border-gray-200
-                    bg-gray-700
                   "
                 >
                   Edit
@@ -102,7 +100,6 @@
                     text-left text-white
                     uppercase
                     border-b border-gray-200
-                    bg-gray-700
                   "
                 >
                   Delete
@@ -111,10 +108,31 @@
             </thead>
             <tbody class="bg-white">
               <tr
-                v-for="client in list"
+                v-for="(client, index) in list"
                 :key="client.id"
-                class="hover:bg-blue-200"
+                class="hover:bg-yellow-50"
+                :class="
+                  selectedRows.includes(client.id)
+                    ? 'bg-yellow-100'
+                    : index % 2 == 0
+                    ? 'bg-gray-50'
+                    : 'bg-white'
+                "
               >
+                <td
+                  class="px-6 py-4 whitespace-no-wrap border-b border-gray-200"
+                >
+                  <label>
+                    <input
+                      type="checkbox"
+                      class="checkbox"
+                      :id="client.id"
+                      :value="client.id"
+                      v-model="selectedRows"
+                      @change="checkRow($event)"
+                    />
+                  </label>
+                </td>
                 <td
                   class="px-6 py-4 whitespace-no-wrap border-b border-gray-200"
                 >
@@ -200,157 +218,175 @@
     <!-- pagination -->
     <div class="flex justify-between">
       <div class="space-x-3">
-        <label for="cars">Page length:</label>
-        <select name="pagelength" id="pageLength" class="py-2 px-2">
-          <option value="10">10</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-          <option value="all">all</option>
-        </select>
+        <div class="flex space-x-4 text-xs">
+          <div class="space-x-2">
+            <label for="cars">Page length:</label>
+            <select
+              name="pagelength"
+              id="pageLength"
+              class="py-2 px-3 rounded-lg"
+              v-model="pageLength"
+              @click="changePageLength"
+            >
+              <option value="10">10</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="all">all</option>
+            </select>
+            rows
+          </div>
+          <div class="space-x-2">
+            <label for="cars">Export to:</label>
+            <select
+              name="pagelength"
+              id="pageLength"
+              class="py-2 px-3 rounded-lg"
+              v-model="exportTo"
+              @click="exportList"
+            >
+              <option value="excel">Excel</option>
+              <option value="csv">CSV</option>
+              <option value="pdf">PDF</option>
+              <option value="print">Print</option>
+            </select>
+          </div>
+        </div>
       </div>
-      <div class="flex">
-        <a
-          href="#"
-          class="
-            flex
-            items-center
-            px-4
-            py-2
-            mx-1
-            text-gray-500
-            bg-gray-300
-            rounded-md
-            cursor-not-allowed
-            dark:bg-gray-800
-            dark:text-gray-600
-          "
-        >
-          previous
-        </a>
-
-        <a
-          href="#"
-          class="
-            flex
-            items-center
-            px-4
-            py-2
-            mx-1
-            text-gray-700
-            transition-colors
-            duration-200
-            transform
-            bg-gray-300
-            rounded-md
-            dark:bg-gray-800
-            dark:text-gray-200
-            hover:bg-yellow-600
-            dark:hover:bg-yellow-500
-            hover:text-white
-            dark:hover:text-gray-200
-          "
-        >
-          1
-        </a>
-
-        <a
-          href="#"
-          class="
-            flex
-            items-center
-            px-4
-            py-2
-            mx-1
-            text-gray-700
-            transition-colors
-            duration-200
-            transform
-            bg-gray-300
-            rounded-md
-            dark:bg-gray-800
-            dark:text-gray-200
-            hover:bg-yellow-600
-            dark:hover:bg-yellow-500
-            hover:text-white
-            dark:hover:text-gray-200
-          "
-        >
-          2
-        </a>
-
-        <a
-          href="#"
-          class="
-            flex
-            items-center
-            px-4
-            py-2
-            mx-1
-            text-gray-700
-            transition-colors
-            duration-200
-            transform
-            bg-gray-300
-            rounded-md
-            dark:bg-gray-800
-            dark:text-gray-200
-            hover:bg-yellow-600
-            dark:hover:bg-yellow-500
-            hover:text-white
-            dark:hover:text-gray-200
-          "
-        >
-          3
-        </a>
-
-        <a
-          href="#"
-          class="
-            flex
-            items-center
-            px-4
-            py-2
-            mx-1
-            text-gray-700
-            transition-colors
-            duration-200
-            transform
-            bg-gray-300
-            rounded-md
-            dark:bg-gray-800
-            dark:text-gray-200
-            hover:bg-yellow-600
-            dark:hover:bg-yellow-500
-            hover:text-white
-            dark:hover:text-gray-200
-          "
-        >
-          Next
-        </a>
-      </div>
+      <pagination :meta="meta" @changePage="changePage" />
     </div>
   </div>
 </template>
 
 <script>
-import { reactive, onMounted, computed } from "vue";
+import { ref, reactive, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import Table from "../../components/Forms/Table.vue";
+import clientService from "@/API/clientService";
+import { createToast } from "mosha-vue-toastify";
+import SearchInput from "../../components/SearchInput.vue";
+import Pagination from "../../components/Pagination.vue";
 
 export default {
+  components: { SearchInput, Pagination },
   setup() {
     const store = useStore();
     const router = useRouter();
     const headers = reactive(["Code", "Name", "Address"]);
+    let pageLength = ref(10);
+    const clientUrl = ref("/v1/clients?");
+    let currentUrl = ref(clientUrl.value);
+    let exportTo = ref("excel");
+    let lookUp = ref("");
+    let selectedRows = ref([]);
+    let list = ref([]);
 
-    onMounted(() => {
-      store.dispatch("getListOfClients");
+    onMounted(async () => {
+      clientService
+        .getList(clientUrl.value + "?paginate=" + pageLength.value)
+        .then((response) => {
+          store.dispatch("loadList", response);
+        })
+        .catch((errors) => {
+          console.log("errors" + errors.message);
+          createToast("Error : " + errors.message, {
+            type: "danger",
+            timeout: 10000,
+          });
+        });
     });
 
     function removeClient(client) {
       // store.commit("setClient", client);
       alert(client);
+    }
+
+    function changePage(url) {
+      //check if all the rows was selected
+      currentUrl.value = url;
+      let nextPage = `${url}&paginate=${pageLength.value}`;
+      if (lookUp.value != "") {
+        nextPage += "&search=" + lookUp.value;
+      }
+      clientService
+        .changePage(nextPage)
+        .then((response) => {
+          store.dispatch("loadList", response);
+          isSelectedAll();
+        })
+        .catch((errors) => {
+          console.log("errors" + errors.message);
+          createToast("Error : " + errors.message, {
+            type: "danger",
+            timeout: 10000,
+          });
+        });
+    }
+
+    function isSelectedAll() {
+      list.value = store.getters.getList;
+      let chkBox = document.getElementById("selectAll");
+      chkBox.checked = true;
+      list.value.forEach((item) => {
+        console.log("new item", item.id);
+        const index = selectedRows.value.indexOf(item.id);
+        if (index < 0) {
+          console.log("di hanahap", item.id);
+          chkBox.checked = false;
+        }
+      });
+    }
+
+    function changePageLength() {
+      changePage(clientUrl.value);
+    }
+
+    function exportList() {
+      createToast("Sorry, this feature is not yet avaible :(", {
+        type: "info",
+        timeout: 5000,
+        position: "bottom-center",
+        showIcon: true,
+        transition: "slide",
+      });
+    }
+
+    function searchClient(searchFor) {
+      let searchUrl = `${clientUrl.value}?paginate=${pageLength.value}&orderBy=client_name&search=${searchFor}`;
+      clientService
+        .search(searchUrl)
+        .then((response) => {
+          store.dispatch("loadList", response);
+        })
+        .catch((errors) => {
+          console.log("errors" + errors.message);
+          createToast("Error : " + errors.message, {
+            type: "danger",
+            timeout: 10000,
+          });
+        });
+    }
+
+    function checkRow(e) {
+      console.log(e);
+      console.log("selected", selectedRows.value);
+    }
+
+    function selectAll(e) {
+      let selectAllRows = e.target.checked;
+      list.value = store.getters.getList;
+      list.value.forEach((item) => {
+        console.log("client:", item.id);
+        const index = selectedRows.value.indexOf(item.id);
+        if (selectAllRows) {
+          if (index < 0) {
+            selectedRows.value.push(item.id);
+          }
+        } else {
+          if (index > -1) {
+            selectedRows.value.splice(index, 1);
+          }
+        }
+      });
     }
 
     return {
@@ -359,6 +395,17 @@ export default {
       links: computed(() => store.getters.getLinks),
       headers,
       removeClient,
+      changePage,
+      pageLength,
+      changePageLength,
+      exportTo,
+      exportList,
+      searchClient,
+      lookUp,
+      selectedRows,
+      checkRow,
+      selectAll,
+      isSelectedAll,
     };
   },
 };

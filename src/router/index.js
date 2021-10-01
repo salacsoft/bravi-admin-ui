@@ -4,6 +4,7 @@ import Main from '../views/Main.vue'
 import Login from '@/views/Auth/Login.vue'
 import ForgotPassword from '@/views/Auth/Forgot-Password.vue'
 import ClientRoutes from './client-routes'
+import GroupRoutes from './group-routes';
 
 
 const routes = [
@@ -17,18 +18,19 @@ const routes = [
         name: 'About',
         component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
       },
-      ...ClientRoutes
+      ...ClientRoutes,
+      ...GroupRoutes
     ]
   },
   {
     path: '/login',
     name: 'Login',
-    component:Login
+    component: Login
   },
   {
     path: '/forgot-password',
     name: 'ForgotPassword',
-    component:ForgotPassword
+    component: ForgotPassword
   },
   {
     path: "/reset-password",
@@ -56,9 +58,9 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   let isAuthenticated = store.getters.isLoggedIn
   const user = store.getters.getUserDetails;
-  if (to.name !== 'Login'  && to.name !== 'ResetPassword' && to.name !== 'ForgotPassword' && !isAuthenticated) next({ name: 'Login' })
+  if (to.name !== 'Login' && to.name !== 'ResetPassword' && to.name !== 'ForgotPassword' && !isAuthenticated) next({ name: 'Login' })
   else {
-    if(to.name == 'Login' && isAuthenticated) next({ name: 'Main' })
+    if (to.name == 'Login' && isAuthenticated) next({ name: 'Main' })
     else next()
   }
 });
