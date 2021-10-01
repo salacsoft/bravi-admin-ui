@@ -5,27 +5,24 @@
       name="pagelength"
       id="pageLength"
       class="py-2 px-3 rounded-lg"
-      v-model="pageLength"
-      @click="changePageLength"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
+      @click="$emit('changePageLength', $event.target.value)"
     >
-      <option value="10">10</option>
-      <option value="50">50</option>
-      <option value="100">100</option>
-      <option value="all">all</option>
+      <option v-for="(selection, index) in options" :key="index" :value="index">
+        {{ selection }}
+      </option>
     </select>
     rows
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
 export default {
   setup() {
-    let pageLength = ref("");
-    return {
-      pageLength,
-    };
+    return {};
   },
+  props: ["options", "modelValue"],
 };
 </script>
 

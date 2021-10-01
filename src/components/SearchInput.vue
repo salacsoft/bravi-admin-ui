@@ -2,10 +2,10 @@
   <div class="flex w-2/6 bg-white rounded-xl h-10 py-2 px-2 shadow-md">
     <input
       type="text"
-      id="searchClient"
       :placeholder="placeholder"
       class="w-full rounded-l-lg px-2 py-2 focus:outline-none"
-      v-model="lookUp"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
       @keyup.enter="search"
     />
     <span class="flex items-center text-yellow-300">
@@ -28,7 +28,7 @@
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
-        @click="clearSearch"
+        @click="refresh"
       >
         <path
           stroke-linecap="round"
@@ -46,26 +46,20 @@ import { ref, computed } from "vue";
 
 export default {
   setup(props, context) {
-    console.log("props", props.test);
-
-    let lookUp = ref("");
-
-    function clearSearch() {
-      lookUp.value = "";
-      search();
+    function refresh() {
+      context.emit("refresh");
     }
 
     function search() {
-      context.emit("search", lookUp.value);
+      context.emit("search");
     }
     return {
       placeHolder: computed(() => props.placeholder),
       search,
-      clearSearch,
-      lookUp,
+      refresh,
     };
   },
-  props: ["placeholder"],
+  props: ["placeholder", "modelValue"],
 };
 </script>
 

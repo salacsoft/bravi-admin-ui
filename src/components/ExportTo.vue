@@ -2,12 +2,12 @@
   <div class="space-x-2">
     <label for="cars">Export to:</label>
     <select
-      name="pagelength"
-      id="pageLength"
       class="py-2 px-3 rounded-lg"
-      v-model="exportTo"
-      @click="exportList"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
+      @click="$emit('exportList')"
     >
+      <option value=""></option>
       <option value="excel">Excel</option>
       <option value="csv">CSV</option>
       <option value="pdf">PDF</option>
@@ -17,21 +17,11 @@
 </template>
 
 <script>
-import { ref } from "vue";
-
 export default {
-  setup(props, context) {
-    let exportTo = ref("excel");
-
-    function exportList() {
-      context.emit("exportList", exportTo);
-    }
-
-    return {
-      exportTo,
-      exportList,
-    };
+  setup() {
+    return {};
   },
+  props: ["modelValue"],
 };
 </script>
 
