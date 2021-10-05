@@ -1,9 +1,21 @@
 <template>
-  <div class="flex w-2/6 bg-white rounded-xl h-10 py-2 px-2 shadow-md">
+  <div
+    class="
+      flex
+      w-2/6
+      bg-transparent
+      h-10
+      py-2
+      px-2
+      border-b
+      hover:border-yellow-400
+      focus:outline-black
+    "
+  >
     <input
       type="text"
       :placeholder="placeholder"
-      class="w-full rounded-l-lg px-2 py-2 focus:outline-none"
+      class="w-full px-2 py-2 bg-transparent focus:outline-none"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
       @keyup.enter="search"

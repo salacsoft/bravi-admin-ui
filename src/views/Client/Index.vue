@@ -1,24 +1,23 @@
 <template>
   <div class="w-full p-5 h-full mx-auto space-y-4">
-    <div class="flex justify-between">
-      <div class="flex space-x-4">
+    <div class="flex justify-between items-center">
+      <div class="bg-green-300">
         <button
           class="
+            px-4
+            py-2
             text-lg
-            flex
-            items-center
-            border
-            rounded-lg
-            text-white
-            px-3
-            space-x-2
-            bg-yellow-600
+            bg-white
+            shadow-lg
+            rounded-full
+            text-gray-700
+            bg-transparent
             hover:bg-yellow-400
           "
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
+            class="h-5 w-5 mx-auto"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -28,14 +27,15 @@
               clip-rule="evenodd"
             />
           </svg>
-          <span>Add Client</span>
+          <span class="tracking-wider">Add</span>
         </button>
       </div>
 
       <search-input
+        class="border-b border-gray-400"
         @search="searchClient"
         @refresh="refreshList"
-        placeholder="search client"
+        placeholder="Search Client"
         v-model="lookUp"
       />
     </div>
@@ -318,7 +318,7 @@ export default {
           store.dispatch("loadList", response);
         })
         .catch((errors) => {
-          console.log("errors" + errors.message);
+          console.log("errors vclinet", errors);
           createToast("Error : " + errors.message, {
             type: "danger",
             timeout: 10000,
@@ -332,7 +332,6 @@ export default {
     }
 
     function changePage(url) {
-      //check if all the rows was selected
       currentUrl.value = url;
       let nextPage = `${url}&paginate=${rowCounts.value}`;
       if (lookUp.value != "") {
@@ -370,7 +369,6 @@ export default {
     }
 
     function exportList() {
-      alert(exportTo.value);
       createToast("Sorry, this feature is not yet avaible :(", {
         type: "info",
         timeout: 5000,

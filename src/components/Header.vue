@@ -90,18 +90,19 @@ export default {
     const router = useRouter();
 
     const logOut = () => {
-      API.post("v1/logout")
-        .then((response) => {
-          createToast("Thank you ", { type: "success" });
-          store.dispatch("clearUserToken");
-          router.push({ name: "Login" });
-        })
-        .catch((error) => {
-          if (error.response.status == 401) {
-            store.dispatch("clearUserToken");
-            router.push({ name: "Login" });
-          }
-        });
+      store.dispatch("logout");
+      // API.post("v1/logout")
+      //   .then((response) => {
+      //     createToast("Thank you ", { type: "success" });
+      //     store.dispatch("logout");
+      //     router.push({ name: "Login" });
+      //   })
+      //   .catch((error) => {
+      //     if (error.response.status == 401) {
+      //       store.dispatch("clearUserToken");
+      //       router.push({ name: "Login" });
+      //     }
+      //   });
     };
 
     return {

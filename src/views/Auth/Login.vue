@@ -42,7 +42,7 @@
                   id="email"
                   placeholder="Enter your email address"
                   v-model="credential.email"
-                  class="w-full rounded-l-lg px-2 py-2 focus:outline-none"
+                  class="w-full text-input focus:outline-none"
                   required
                 />
                 <span>
@@ -71,7 +71,7 @@
                   id="password"
                   placeholder="Enter your password"
                   v-model="credential.password"
-                  class="w-full rounded-l-lg px-2 py-2 focus:outline-none"
+                  class="w-full text-input focus:outline-none"
                   required
                 />
                 <span class="eye-open hidden" @click="toggleEye">
@@ -110,24 +110,14 @@
             </div>
           </div>
 
-          <button
-            class="
-              px-4
-              py-2
-              w-full
-              max-w-sm
-              tracking-wider
-              rounded-xl
-              bg-gradient-to-r
-              from-yellow-400
-              via-pink-500
-              to-red-500
-            "
-          >
+          <button class="btn focus:outline-none gradient-orange-to-red">
             Login
           </button>
           <div class="flex justify-end w-full max-w-sm mt-4">
-            <router-link to="forgot-password" class="underline tracking-wider">
+            <router-link
+              to="forgot-password"
+              class="underline tracking-wider focus:outline-none"
+            >
               Forgot Password
             </router-link>
           </div>
@@ -175,11 +165,12 @@ export default {
             user_uuid,
             user_id,
           });
+          store.dispatch("initializeLogoutTimer");
           router.push("/");
         })
         .catch((error) => {
-          if (error.response && error.response.data) {
-            let msg = error.response.data.message;
+          if (error && error.data) {
+            let msg = error.message;
             status.value = msg;
             createToast(msg, { type: "danger", timeout: 10000 });
           }
@@ -212,5 +203,16 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
+.iput-text {
+  @apply rounded-l-lg px-2 py-2  outline-none;
+}
+
+.gradient-orange-to-red {
+  @apply bg-gradient-to-r   from-yellow-400    via-pink-500   to-red-500;
+}
+
+.btn {
+  @apply px-4  py-2  w-full shadow-md max-w-sm tracking-wider border-none rounded-xl outline-none;
+}
 </style>
