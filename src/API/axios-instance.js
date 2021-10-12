@@ -19,7 +19,6 @@ instance.interceptors.request.use(function (config) {
   return config;
 }, function (error) {
   // Do something with request error
-  console.log("reqwuest ", error.response);
   return Promise.reject(error);
 });
 
@@ -27,12 +26,10 @@ instance.interceptors.request.use(function (config) {
 instance.interceptors.response.use(function (response) {
   // Any status code that lie within the range of 2xx cause this function to trigger
   // Do something with response data
-  console.log("success response", response);
   return response;
 }, function (error) {
   // Any status codes that falls outside the range of 2xx cause this function to trigger
   // Do something with response error
-  console.log("response errors dito", error.response);
   if (error.response.status == 401) {
     store.dispatch("logout");
   }
@@ -42,16 +39,16 @@ instance.interceptors.response.use(function (response) {
 
 // API Methods
 export const API = {
-  post(endpoint, formData) {
-    return instance.post(endpoint, formData);
+  post(endpoint, formData, customHeader = {}) {
+    return instance.post(endpoint, formData, customHeader);
   },
   patch(endpoint, formData) {
     return instance.patch(endpoint, formData);
   },
-  get(endpoint) {
-    return instance.get(endpoint);
+  get(endpoint, customHeader = {}) {
+    return instance.get(endpoint, customHeader);
   },
-  delete(endpoint) {
-    return instance.delete(endpoint);
+  delete(endpoint, customHeader = {}) {
+    return instance.delete(endpoint, customHeader);
   }
 }

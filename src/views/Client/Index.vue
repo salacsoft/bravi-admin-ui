@@ -1,8 +1,9 @@
 <template>
   <div class="w-full p-5 h-full mx-auto space-y-4">
     <div class="flex justify-between items-center">
-      <div class="bg-green-300">
+      <div class="">
         <button
+          @click="addNewClient"
           class="
             px-4
             py-2
@@ -33,7 +34,7 @@
 
       <search-input
         class="border-b border-gray-400"
-        @search="searchClient"
+        @search="filterClient"
         @refresh="refreshList"
         placeholder="Search Client"
         v-model="lookUp"
@@ -232,226 +233,7 @@
   </div>
 </template>
 
-<script>
-import { ref, reactive, onMounted, computed } from "vue";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-import clientService from "@/API/clientService";
-import { createToast } from "mosha-vue-toastify";
-import SearchInput from "../../components/SearchInput.vue";
-import Pagination from "../../components/Pagination.vue";
-import PageLength from "../../components/PageLength.vue";
-import ExportTo from "../../components/ExportTo.vue";
-
-export default {
-  components: { SearchInput, Pagination, PageLength, ExportTo },
-  setup() {
-    const store = useStore();
-    const router = useRouter();
-
-    //hold the base url and current url for pagination
-    const clientUrl = ref("/v1/clients?");
-    let currentUrl = ref(clientUrl.value);
-
-    //table column headers
-    const headers = reactive(["Code", "Name", "Address"]);
-
-    //default pageLength
-    let rowCounts = ref(10);
-
-    const pageOptions = reactive({
-      10: "10",
-      20: "20",
-      30: "30",
-      50: "50",
-      100: "100",
-      200: "200",
-      1000: "1K",
-      2000: "2K",
-      3000: "3K",
-      5000: "5K",
-      10000: "10K",
-      50000: "50K",
-      100000: "100K",
-    });
-
-    //default export selection
-    let exportTo = ref("");
-
-    //variable that holds the string to search
-    let lookUp = ref("");
-
-    //holds the id of selected rows
-    let selectedRows = ref([]);
-
-    //list of clients
-    let list = ref([]);
-    const haveActionButon = ref(true);
-
-    const dataColumns = reactive([
-      "client_code",
-      "client_name",
-      "client_address",
-    ]);
-
-    const dataActions = reactive([
-      {
-        tooltip: "Click to edit Client",
-        trigger: "edit",
-        label:
-          '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />  <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>',
-        data: "id",
-      },
-      {
-        tooltip: "Click to Remove Client",
-        trigger: "delete",
-        label:
-          '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-700" viewBox="0 0 20 20" fill="currentColor">  <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>',
-        data: "id",
-      },
-    ]);
-
-    onMounted(async () => {
-      clientService
-        .getList(clientUrl.value + "?paginate=" + rowCounts.value)
-        .then((response) => {
-          store.dispatch("loadList", response);
-        })
-        .catch((errors) => {
-          console.log("errors vclinet", errors);
-          createToast("Error : " + errors.message, {
-            type: "danger",
-            timeout: 10000,
-          });
-        });
-    });
-
-    function removeClient(client) {
-      // store.commit("setClient", client);
-      alert(client);
-    }
-
-    function changePage(url) {
-      currentUrl.value = url;
-      let nextPage = `${url}&paginate=${rowCounts.value}`;
-      if (lookUp.value != "") {
-        nextPage += "&search=" + lookUp.value;
-      }
-      clientService
-        .changePage(nextPage)
-        .then((response) => {
-          store.dispatch("loadList", response);
-          isSelectedAll();
-        })
-        .catch((errors) => {
-          console.log("errors" + errors.message);
-          createToast("Error : " + errors.message, {
-            type: "danger",
-            timeout: 10000,
-          });
-        });
-    }
-
-    function isSelectedAll() {
-      list.value = store.getters.getList;
-      let chkBox = document.getElementById("selectAll");
-      chkBox.checked = true;
-      list.value.forEach((item) => {
-        const index = selectedRows.value.indexOf(item.id);
-        if (index < 0) {
-          chkBox.checked = false;
-        }
-      });
-    }
-
-    function changePageLength(len) {
-      changePage(clientUrl.value);
-    }
-
-    function exportList() {
-      createToast("Sorry, this feature is not yet avaible :(", {
-        type: "info",
-        timeout: 5000,
-        position: "bottom-center",
-        showIcon: true,
-        transition: "slide",
-      });
-    }
-
-    function searchClient() {
-      let searchUrl = `${clientUrl.value}?paginate=${rowCounts.value}&orderBy=client_name&search=${lookUp.value}`;
-      filterClient(searchUrl);
-    }
-
-    function filterClient(url) {
-      clientService
-        .search(url)
-        .then((response) => {
-          store.dispatch("loadList", response);
-        })
-        .catch((errors) => {
-          console.log("errors" + errors.message);
-          createToast("Error : " + errors.message, {
-            type: "danger",
-            timeout: 10000,
-          });
-        });
-    }
-
-    function refreshList() {
-      lookUp.value = "";
-      let filterUrl = `${clientUrl.value}?paginate=${rowCounts.value}&orderBy=client_name`;
-      filterClient(filterUrl);
-    }
-
-    function checkRow(e) {
-      console.log(e);
-      console.log("selected", selectedRows.value);
-    }
-
-    function selectAll(e) {
-      let selectAllRows = e.target.checked;
-      list.value = store.getters.getList;
-      list.value.forEach((item) => {
-        console.log("client:", item.id);
-        const index = selectedRows.value.indexOf(item.id);
-        if (selectAllRows) {
-          if (index < 0) {
-            selectedRows.value.push(item.id);
-          }
-        } else {
-          if (index > -1) {
-            selectedRows.value.splice(index, 1);
-          }
-        }
-      });
-    }
-
-    return {
-      list: computed(() => store.getters.getList),
-      meta: computed(() => store.getters.getMeta),
-      links: computed(() => store.getters.getLinks),
-      headers,
-      dataColumns,
-      dataActions,
-      haveActionButon,
-      rowCounts,
-      pageOptions,
-      lookUp,
-      selectedRows,
-      exportTo,
-      removeClient,
-      changePage,
-      changePageLength,
-      exportList,
-      searchClient,
-      refreshList,
-      checkRow,
-      selectAll,
-      isSelectedAll,
-    };
-  },
-};
+<script src="./client.js">
 </script>
 
 <style lang="scss" scoped>

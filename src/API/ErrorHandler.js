@@ -1,6 +1,7 @@
-const ErrorHandler = (errors)  => {
-    const responseData = errors.response.data ?? {};
-    const StatusCode = errors.response.status ?? 500;
+const ErrorHandler = (errors) => {
+    console.log("error hablded", errors.status);
+    const responseData = errors.data ? errors.data : {};
+    const StatusCode = errors.status ? errors.status : 500;
     const status = {
         400: "Bad request, Please check your data",
         401: "UnAuthorized",
@@ -12,40 +13,40 @@ const ErrorHandler = (errors)  => {
     }
 
     const error = {
-        422: function(data) {
+        422: function (data) {
             let messages = "";
             let errors = data.errors;
             Object.keys(errors).map(key => {
-                messages += errors[key][0] + " \n ";
+                messages += errors[key][0] + " <br> ";
             });
-            return {title: status[StatusCode], description: messages};
+            return { title: status[StatusCode], description: messages };
         },
         400: (error) => {
             const message = error.message ?? "Something went wrong";
-            return {title: status[StatusCode], description: message};
+            return { title: status[StatusCode], description: message };
         },
         401: (error) => {
             const message = error.message ?? "Something went wrong";
-            return {title: status[StatusCode], description: message};
+            return { title: status[StatusCode], description: message };
         },
         403: (error) => {
             const message = error.message ?? "Something went wrong";
-            return {title: status[StatusCode], description: message};
+            return { title: status[StatusCode], description: message };
         },
         409: (error) => {
             const message = error.message ?? "Something went wrong";
-            return {title: status[StatusCode], description: message};
+            return { title: status[StatusCode], description: message };
         },
         500: (error) => {
             const message = error.message ?? "Something went wrong";
-            return {title: status[StatusCode], description: message};
+            return { title: status[StatusCode], description: message };
         },
         503: (error) => {
             const message = error.message ?? "Something went wrong";
-            return {title: status[StatusCode], description: message};
+            return { title: status[StatusCode], description: message };
         },
     }
-    return error[errors.response.status](responseData);
+    return error[StatusCode](responseData);
 }
 
 export default ErrorHandler;
