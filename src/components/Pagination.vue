@@ -33,7 +33,6 @@ import { computed } from "vue";
 
 export default {
   setup(props, context) {
-    console.log("poprs metre", props.meta.target);
     function changePage(url) {
       context.emit("changePage", url);
     }

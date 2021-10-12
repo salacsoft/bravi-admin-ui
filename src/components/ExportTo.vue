@@ -8,18 +8,24 @@
       @click="$emit('exportList')"
     >
       <option value=""></option>
-      <option value="excel">Excel</option>
-      <option value="csv">CSV</option>
-      <option value="pdf">PDF</option>
-      <option value="print">Print</option>
+      <option
+        v-for="(option, index) in Object.keys(exportOptions)"
+        :key="index"
+        :value="option"
+      >
+        {{ exportOptions[option] }}
+      </option>
     </select>
   </div>
 </template>
 
 <script>
+import { reactive } from "vue";
+import { EXPORT_TO } from "@/constants/Page";
 export default {
   setup() {
-    return {};
+    const exportOptions = reactive(EXPORT_TO);
+    return { exportOptions };
   },
   props: ["modelValue"],
 };
