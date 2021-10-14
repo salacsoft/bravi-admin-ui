@@ -1,4 +1,4 @@
-import { toRaw, reactive, computed } from "vue";
+import { toRaw, ref, reactive, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import FormInput from "@/components/Forms/FormInput";
 import FormTextArea from '@/components/Forms/FormTextArea';
@@ -29,6 +29,16 @@ export default {
 
 
 
+      const id = ref(null);
+
+      onMounted(() => {
+
+         id.value = route.params.id || null;
+         if (id.value) getClientInfo(id.value);
+
+      });
+
+
       const rules = computed(() => {
          return {
             client_code: { required },
@@ -36,15 +46,31 @@ export default {
          }
       });
 
-
       const v = useVuelidate(rules, form);
 
+      function getClientInfo(id) {
+         clientAPI.find(id)
+            .then(response => {
+               let data = response.data;
+               form.client_code = data.client_code;
+               form.client_name = data.client_name;
+               form.client_address = data.client_address;
+               data.value = data.id;
+            })
+            .catch(errors => {
+               let { title, description } = ErrorHandler(errors)
+               createToast({ title, description }, {
+                  type: "danger",
+                  timeout: 10000,
+               });
+            });
+      }
+
+
       function submitForm() {
-         const id = route.params.id ? route.params.id : null;
-         console.log("forms", toRaw(form));
          v.value.$validate();
          if (!v.value.$error) {
-            if (id)
+            if (id.value)
                updateClient()
             else
                saveClient();
@@ -54,7 +80,7 @@ export default {
 
 
       function saveClient() {
-         clientAPI.saveClient(toRaw(form))
+         clientAPI.save(toRaw(form))
             .then(response => {
                let { client_name: clientName } = response.data.data;
                createToast({
@@ -63,8 +89,10 @@ export default {
                }, {
                   type: "success",
                   timeout: 5000,
+                  onClose: (() => {
+                     router.push({ name: "Clients" });
+                  })
                });
-               router.push({ name: "Clients" });
             })
             .catch(errors => {
                let { title, description } = ErrorHandler(errors)
@@ -78,18 +106,37 @@ export default {
 
 
       function updateClient() {
-         clientAPI.saveClient(id.value, toRaw(form))
+         clientAPI.update(id.value, toRaw(form))
             .then(response => {
-               console.log(response)
+               let { client_name: clientName } = response.data.data;
+               createToast({
+                  title: "Success",
+                  description: `Client ( ${clientName} ) successfully updated.`
+               }, {
+                  type: "success",
+                  timeout: 5000,
+                  onClose: (() => {
+                     router.push({ name: "Clients" });
+                  })
+               });
             })
             .catch(errors => {
-               console.log(errors);
+               let { title, description } = ErrorHandler(errors)
+               createToast({ title, description }, {
+                  type: "danger",
+                  timeout: 10000,
+               });
             });
+      }
+
+      function cancel() {
+         router.go(-1);
       }
 
       return {
          form,
          submitForm,
+         cancel,
          v
       };
    }

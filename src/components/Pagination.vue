@@ -23,6 +23,12 @@
             ? 'bg-yellow-700 text-white cursor-not-allowed'
             : 'text-gray-800 hover:bg-yellow-600  dark:hover:bg-yellow-500  hover:text-white  dark:hover:text-gray-200'
         "
+        v-if="
+          (pageLength > 10 && index < 4 && page.active == false) ||
+          page.active == true ||
+          (pageLength > 10 && index > 9 && page.active == false) ||
+          pageLength < 10
+        "
       ></button>
     </div>
   </div>
@@ -37,7 +43,12 @@ export default {
       context.emit("changePage", url);
     }
 
-    return { pages: computed(() => props.meta), changePage };
+    const pageLength = computed(() => {
+      console.log("meta", props.meta.links.length);
+      return props.meta.links.length;
+    });
+
+    return { pages: computed(() => props.meta), changePage, pageLength };
   },
   props: ["meta"],
 };

@@ -7,21 +7,27 @@ export const CLIENT_ENDPOINT = {
 }
 
 export const clientAPI = {
-   async getList(options) {
+   getList(options) {
       let paginate = options.paginate ? `paginate=${options.paginate}&` : "";
       let orderBy = options.orderBy ? `orderBy=${options.orderBy}&` : "";
       let search = options.search ? `search=${options.search}` : "";
-      return await API.get(CLIENT_ENDPOINT.URL + "?" + paginate + orderBy + search)
+      return API.get(CLIENT_ENDPOINT.URL + "?" + paginate + orderBy + search)
    },
-   async changePage(url) {
+   find(id) {
+      return API.get(CLIENT_ENDPOINT.URL + "/" + id);
+   },
+   changePage(url) {
       return API.get(url);
    },
-   async saveClient(payload) {
+   save(payload) {
       console.log(payload);
-      return await API.post(CLIENT_ENDPOINT.URL, payload)
+      return API.post(CLIENT_ENDPOINT.URL, payload)
    },
-   async updateClient(id, payload) {
-      return await API.patch(CLIENT_ENDPOINT.URL + "/" + id, payload);
+   update(id, payload) {
+      return API.patch(CLIENT_ENDPOINT.URL + "/" + id, payload);
+   },
+   delete(id) {
+      return API.delete(CLIENT_ENDPOINT.URL + "/" + id);
    }
 
 
