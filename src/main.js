@@ -6,4 +6,9 @@ import store from './store'
 import './index.css'
 import 'mosha-vue-toastify/dist/style.css'
 
-createApp(App).use(store).use(router).mount('#app')
+
+
+const app = createApp(App);
+app.use(store);
+app.use(router);
+app.mount('#app');

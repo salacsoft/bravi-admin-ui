@@ -63,6 +63,7 @@
             </div>
             <div class="form-btn flex space-x-2 justify-evenly">
               <action-button
+                @click="cancel"
                 btnColor="gray"
                 label="Cancel"
                 action="cancel"
