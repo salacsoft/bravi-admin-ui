@@ -216,7 +216,7 @@ export default {
       }
 
       const addNewClient = () => {
-         this.$swal('Hello Vue world!!!');
+
          router.push({ name: "NewClient" });
       }
 
