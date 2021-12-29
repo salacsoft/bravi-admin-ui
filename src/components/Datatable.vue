@@ -182,7 +182,6 @@ export default {
         let chkBox = document.getElementById("selectAll");
 
         chkBox.checked = list.length > 0 ? true : false;
-
         list.forEach((item) => {
           const index = selectedRows.indexOf(item.id);
           if (index < 0) {
