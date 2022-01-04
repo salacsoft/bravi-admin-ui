@@ -21,6 +21,7 @@
     "register-service-worker": "^1.7.1",
     "secure-ls": "^1.2.6",
     "sweetalert2": "^11.1.7",
+    "vee-validate": "^4.5.7",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0",

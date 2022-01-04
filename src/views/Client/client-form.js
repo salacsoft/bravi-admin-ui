@@ -9,7 +9,7 @@ import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { clientAPI } from "@/API/client-api";
 import { createToast } from "mosha-vue-toastify";
-import ErrorHandler from "@/API/ErrorHandler";
+import errorHandler from "@/API/ErrorHandler";
 
 
 export default {
@@ -58,11 +58,8 @@ export default {
                data.value = data.id;
             })
             .catch(errors => {
-               let { title, description } = ErrorHandler(errors)
-               createToast({ title, description }, {
-                  type: "danger",
-                  timeout: 10000,
-               });
+               let msg = errorHandler(errors);
+               createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
             });
       }
 
@@ -95,11 +92,8 @@ export default {
                });
             })
             .catch(errors => {
-               let { title, description } = ErrorHandler(errors)
-               createToast({ title, description }, {
-                  type: "danger",
-                  timeout: 10000,
-               });
+               let msg = errorHandler(errors);
+               createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
             });
       }
 
@@ -121,11 +115,8 @@ export default {
                });
             })
             .catch(errors => {
-               let { title, description } = ErrorHandler(errors)
-               createToast({ title, description }, {
-                  type: "danger",
-                  timeout: 10000,
-               });
+               let msg = errorHandler(errors);
+               createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
             });
       }
 

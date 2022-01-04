@@ -1,17 +1,5 @@
 <template>
-  <div
-    class="
-      flex
-      justify-between
-      bg-gradient-to-r
-      from-yellow-400
-      via-pink-500
-      to-red-500
-      h-14
-      items-center
-      px-4
-    "
-  >
+  <div class="flex justify-between bg-yellow-500 h-14 items-center px-4">
     <!-- left nav -->
     <button>
       <svg

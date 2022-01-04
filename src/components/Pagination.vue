@@ -10,8 +10,7 @@
           mx-1
           bg-gray-300
           rounded-md
-          dark:bg-gray-800
-          dark:text-gray-700
+          dark:bg-gray-800 dark:text-gray-700
         "
         @click="changePage(page.url)"
         v-bind:disabled="page.active || page.url == null"
@@ -44,7 +43,6 @@ export default {
     }
 
     const pageLength = computed(() => {
-      console.log("meta", props.meta.links.length);
       return props.meta.links.length;
     });
 

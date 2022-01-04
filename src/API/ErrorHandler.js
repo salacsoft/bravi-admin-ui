@@ -1,52 +1,43 @@
-const ErrorHandler = (errors) => {
-    console.log("error hablded", errors.status);
-    const responseData = errors.data ? errors.data : {};
-    const StatusCode = errors.status ? errors.status : 500;
-    const status = {
-        400: "Bad request, Please check your data",
-        401: "UnAuthorized",
-        403: "Forbidden",
-        422: "Invalid data given",
-        409: "Conflict, Please check the response message",
-        500: "Something went wrong please ask for assistance from system administrator",
-        503: "Service Unavailable",
+const errorHandler = (error) => {
+
+    let errorType = {
+        '422': () => status422(error.data.errors || []),
+        '401': () => status401(error.data),
+        '404': () => status404(error.data),
+        '500': () => status500(error.data)
     }
 
-    const error = {
-        422: function (data) {
-            let messages = "";
-            let errors = data.errors;
-            Object.keys(errors).map(key => {
-                messages += errors[key][0] + " <br> ";
-            });
-            return { title: status[StatusCode], description: messages };
-        },
-        400: (error) => {
-            const message = error.message ?? "Something went wrong";
-            return { title: status[StatusCode], description: message };
-        },
-        401: (error) => {
-            const message = error.message ?? "Something went wrong";
-            return { title: status[StatusCode], description: message };
-        },
-        403: (error) => {
-            const message = error.message ?? "Something went wrong";
-            return { title: status[StatusCode], description: message };
-        },
-        409: (error) => {
-            const message = error.message ?? "Something went wrong";
-            return { title: status[StatusCode], description: message };
-        },
-        500: (error) => {
-            const message = error.message ?? "Something went wrong";
-            return { title: status[StatusCode], description: message };
-        },
-        503: (error) => {
-            const message = error.message ?? "Something went wrong";
-            return { title: status[StatusCode], description: message };
-        },
-    }
-    return error[StatusCode](responseData);
+    return errorType[error.status]?.() || "Please, check your network connection and contact system Administrator";
+
 }
 
-export default ErrorHandler;
+
+function status422(errors) {
+    let errorMsg = "";
+    for (let err in errors) {
+        if (Array.isArray(errors[err])) {
+            for (let item in errors[err]) {
+                errorMsg += err.toUpperCase() + " : " + errors[err][item] + "<br>";
+            }
+        } else {
+            errorMsg += "\n" + errors[err];
+        }
+    }
+    return errorMsg;
+}
+
+
+function status401(error) {
+    return error.message || "unAuthorized access - please contact system administrator!";
+}
+
+
+function status500(error) {
+    return error.message || "Server Error - please contact system administrator!";
+}
+
+function status404(error) {
+    return error.message || "Resource not found! - please contact system administrator";
+}
+
+export default errorHandler;

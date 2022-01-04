@@ -1,52 +1,45 @@
+//LIBRARIES and PACKAGES
 import { ref, reactive, onMounted, computed } from "vue";
+import Swal from 'sweetalert2'
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import { CLIENT_ENDPOINT, clientAPI } from "@/API/client-api";
-import { API } from "@/API/axios-instance";
 import { createToast } from "mosha-vue-toastify";
+
+//COMPONENTS
 import { PAGE_LENGTH } from "@/constants/Page";
-import SearchInput from "../../components/SearchInput.vue";
-import Pagination from "../../components/Pagination.vue";
-import PageLength from "../../components/PageLength.vue";
-import ExportTo from "../../components/ExportTo.vue";
+import SearchInput from "@/components/SearchInput.vue";
+import Pagination from "@/components/Pagination.vue";
+import PageLength from "@/components/PageLength.vue";
+import ExportTo from "@/components/ExportTo.vue";
 import Datatable from "@/components/Datatable";
 import AddIcon from '@/components/Icons/AddIcon';
-import Swal from 'sweetalert2'
-import errorHandler from "@/API/ErrorHandler";
+import PageTitle from '@/components/PageTitle';
+
+
+//HELPERS
+import { apiHttp } from '@/API/httpService.js'
+import errorHandler from '@/API/ErrorHandler';
+
+//CONSTANTS
+import { ACTION_BUTTONS, API_OPTION, COLUMNS, GROUP_ENDPOINT, TABLE_HEADERS, HAVE_ACTION_BUTTON } from './constant.js'
 
 export default {
-   components: { AddIcon, SearchInput, Pagination, PageLength, ExportTo, Datatable },
+
+   components: { AddIcon, SearchInput, Pagination, PageLength, ExportTo, Datatable, PageTitle },
+
    setup() {
 
       const store = useStore();
       const router = useRouter();
       const pageOptions = reactive(PAGE_LENGTH);
-      const headers = reactive(["Code", "Name", "Address"]);
-      const haveActionButon = ref(true);
 
-      const actionButtons = [{
-         icon: "EditIcon",
-         color: "text-blue-400",
-         action: "edit"
-      }, {
-         icon: "RemoveIcon",
-         color: "text-red-500",
-         action: "remove"
-      }];
-
-      const dataColumns = reactive([
-         "client_code",
-         "client_name",
-         "client_address",
-      ]);
-
-
-      let currentUrl = ref(CLIENT_ENDPOINT.URL + "?page=1");
+      let currentUrl = ref(GROUP_ENDPOINT + "?page=1");
       let rowCounts = ref(10);
       let lookUp = ref("");
       let selectedRows = ref([]);
       let list = ref([]);
       let exportTo = ref('');
+      let options = reactive(API_OPTION);
 
 
 
@@ -55,16 +48,15 @@ export default {
       });
 
       function getList() {
-         let options = {
-            paginate: rowCounts.value ? rowCounts.value : null,
-            search: lookUp.value ? lookUp.value : null,
-            orderBy: "client_name",
-         };
 
-         clientAPI
-            .getList(options)
+
+         apiHttp.get(GROUP_ENDPOINT, options)
             .then((response) => {
-               store.dispatch("loadList", response.data);
+               store.dispatch("loadGroupList", response.data);
+
+               let groupList = store.getters.getGroupList;
+               console.log("group", groupList);
+
             })
             .catch((errors) => {
                let msg = errorHandler(errors);
@@ -72,10 +64,10 @@ export default {
             });
       }
 
-      const removeConfirmation = (client) => {
+      const removeConfirmation = (group) => {
          Swal.fire({
             title: 'Are you sure?',
-            html: `${client.client_code} <br>  <b>${client.client_name} </b><br> ${client.client_address}`,
+            html: `Group : <b>${group.group_name} </b>`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -83,21 +75,22 @@ export default {
             confirmButtonText: 'Yes, delete it!'
          }).then(result => {
             if (result.isConfirmed) {
-               removeClient(client);
+               removeClient(group);
             }
          })
       }
 
 
-      function removeClient(client) {
-         clientAPI.delete(client.id)
+      function removeClient(group) {
+         apiHttp.delete(GROUP_ENDPOINT + "/" + group.id)
             .then(response => {
                createToast({
                   title: "Success",
-                  description: `Client ( ${client.client_name} ) has been deleted.`
+                  description: `Group : ( ${group.group_name} ) has been deleted.`
                }, {
                   type: "success",
-                  timeout: 3000
+                  timeout: 3000,
+                  position: 'top-center',
                });
                changePage(currentUrl.value);
             })
@@ -108,8 +101,8 @@ export default {
       }
 
 
-      const editClient = (client) => {
-         router.push({ name: "UpdateClient", params: { id: client.id } });
+      const editClient = (group) => {
+         router.push({ name: "GroupUpdate", params: { id: group.id } });
       }
 
 
@@ -121,9 +114,9 @@ export default {
             nextPage += "&search=" + lookUp.value;
          }
 
-         clientAPI.changePage(nextPage)
+         apiHttp.get(nextPage)
             .then((response) => {
-               store.dispatch("loadList", response.data);
+               store.dispatch("loadGroupList", response.data);
             })
             .catch((errors) => {
                let msg = errorHandler(errors);
@@ -131,39 +124,25 @@ export default {
             });
       }
 
-      // function isSelectedAll() {
-      //    list.value = store.getters.getList;
-      //    let chkBox = document.getElementById("selectAll");
-      //    chkBox.checked = list.value.length > 0 ? true : false;
-      //    list.value.forEach((item) => {
-      //       const index = selectedRows.value.indexOf(item.id);
-      //       if (index < 0) {
-      //          chkBox.checked = false;
-      //       }
-      //    });
-      // }
 
       const changePageLength = () => {
-         changePage(CLIENT_ENDPOINT.URL + "?");
+         options.params.paginate = rowCounts.value;
+         options.params.search = lookUp.value;
+         getList();
       }
 
 
       const refreshList = () => {
          lookUp.value = "";
          selectedRows.value = [];
-         filterClient();
+         filterList();
       }
 
-      const filterClient = () => {
-         let options = {
-            paginate: rowCounts.value ? rowCounts.value : null,
-            search: lookUp.value ? lookUp.value : null,
-            orderBy: "client_name",
-         };
-         console.log("options", options);
-         clientAPI.getList(options)
+      const filterList = () => {
+         options.params.search = lookUp.value;
+         apiHttp.get(GROUP_ENDPOINT, options)
             .then((response) => {
-               store.dispatch("loadList", response.data);
+               store.dispatch("loadGroupList", response.data);
             })
             .catch((errors) => {
                let msg = errorHandler(errors);
@@ -174,7 +153,6 @@ export default {
 
       const selectRow = (payload) => {
          const index = selectedRows.value.indexOf(payload.id);
-         console.log("cjec", payload);
          if (payload.checked) {
             if (index < 0) {
                selectedRows.value.push(payload.id);
@@ -189,7 +167,7 @@ export default {
 
       const selectAll = (selectedAll) => {
          let selectAllRows = selectedAll;
-         list.value = store.getters.getList;
+         list.value = store.getters.getGroupList;
          list.value.forEach((item) => {
             const index = selectedRows.value.indexOf(item.id);
             if (selectAllRows) {
@@ -204,17 +182,16 @@ export default {
          });
       }
 
-      const addNewClient = () => {
-
-         router.push({ name: "NewClient" });
+      const addNewGroup = () => {
+         router.push({ name: "GroupCreate" });
       }
 
 
       const exportList = () => {
          let type = {
-            "excel": "Clients.xlsx",
-            "pdf": "Clients.pdf",
-            "csv": "Clients.csv",
+            "excel": "groups.xlsx",
+            "pdf": "groups.pdf",
+            "csv": "groups.csv",
          }
 
          if (exportTo.value == "print") {
@@ -226,8 +203,8 @@ export default {
                transition: "slide",
             });
          } else {
-            let url = CLIENT_ENDPOINT.URL + "/file/export";
-            API.post(url, { selected: selectedRows.value, exportType: exportTo.value }, { responseType: "blob" })
+            let url = GROUP_ENDPOINT + "/file/export";
+            apiHttp.post(url, { selectedIds: selectedRows.value, exportType: exportTo.value }, { responseType: "blob" })
                .then((response) => {
                   const url = window.URL.createObjectURL(new Blob([response.data]));
                   const link = document.createElement("a");
@@ -243,20 +220,20 @@ export default {
       }
 
       return {
-         list: computed(() => store.getters.getList),
-         meta: computed(() => store.getters.getMeta),
-         links: computed(() => store.getters.getLinks),
-         headers,
-         dataColumns,
-         haveActionButon,
+         list: computed(() => store.getters.getGroupList),
+         meta: computed(() => store.getters.getGroupMeta),
+         links: computed(() => store.getters.getGroupLinks),
+         TABLE_HEADERS,
+         COLUMNS,
+         HAVE_ACTION_BUTTON,
          rowCounts,
          pageOptions,
          lookUp,
          selectedRows,
          exportTo,
-         actionButtons,
-         filterClient,
-         addNewClient,
+         ACTION_BUTTONS,
+         filterList,
+         addNewGroup,
          removeConfirmation,
          editClient,
          changePage,
