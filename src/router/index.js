@@ -4,7 +4,7 @@ import Main from '../views/Main.vue'
 import Login from '@/views/Auth/Login.vue'
 import ForgotPassword from '@/views/Auth/Forgot-Password.vue'
 import ClientRoutes from './client-routes'
-import GroupRoutes from './group-routes';
+import GroupRoutes from '@/views/Group/js/route';
 
 
 const routes = [

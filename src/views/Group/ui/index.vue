@@ -1,5 +1,10 @@
 <template>
-  <div class="w-full p-5 h-full mx-auto space-y-4">
+  <div class="w-full h-full space-y-5">
+    <page-title
+      title="Group List"
+      subTitle="list of groups available"
+      class="mb-5"
+    />
     <div class="flex justify-between items-center">
       <div class="">
         <button

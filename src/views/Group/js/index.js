@@ -1,9 +1,11 @@
+//LIBRARIES and PACKAGES
 import { ref, reactive, onMounted, computed } from "vue";
+import Swal from 'sweetalert2'
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import { CLIENT_ENDPOINT, clientAPI } from "@/API/client-api";
-import { API } from "@/API/axios-instance";
 import { createToast } from "mosha-vue-toastify";
+
+//COMPONENTS
 import { PAGE_LENGTH } from "@/constants/Page";
 import SearchInput from "@/components/SearchInput.vue";
 import Pagination from "@/components/Pagination.vue";
@@ -11,23 +13,25 @@ import PageLength from "@/components/PageLength.vue";
 import ExportTo from "@/components/ExportTo.vue";
 import Datatable from "@/components/Datatable";
 import AddIcon from '@/components/Icons/AddIcon';
-import Swal from 'sweetalert2'
+import PageTitle from '@/components/PageTitle';
+
 
 //HELPERS
-import { apiClient } from '@/API/httpService.js'
+import { apiHttp } from '@/API/httpService.js'
+import errorHandler from '@/API/ErrorHandler';
 
 //CONSTANTS
 import { ACTION_BUTTONS, API_OPTION, COLUMNS, GROUP_ENDPOINT, TABLE_HEADERS, HAVE_ACTION_BUTTON } from './constant.js'
 
 export default {
-   components: { AddIcon, SearchInput, Pagination, PageLength, ExportTo, Datatable },
+
+   components: { AddIcon, SearchInput, Pagination, PageLength, ExportTo, Datatable, PageTitle },
+
    setup() {
 
       const store = useStore();
       const router = useRouter();
       const pageOptions = reactive(PAGE_LENGTH);
-
-
 
       let currentUrl = ref(GROUP_ENDPOINT + "?page=1");
       let rowCounts = ref(10);
@@ -46,7 +50,7 @@ export default {
       function getList() {
 
 
-         apiClient.get(GROUP_ENDPOINT, options)
+         apiHttp.get(GROUP_ENDPOINT, options)
             .then((response) => {
                store.dispatch("loadGroupList", response.data);
 
@@ -55,18 +59,15 @@ export default {
 
             })
             .catch((errors) => {
-               console.log("errors group", errors);
-               createToast("Error : " + errors.response.message, {
-                  type: "danger",
-                  timeout: 10000,
-               });
+               let msg = errorHandler(errors);
+               createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
             });
       }
 
-      const removeConfirmation = (client) => {
+      const removeConfirmation = (group) => {
          Swal.fire({
             title: 'Are you sure?',
-            html: `${client.client_code} <br>  <b>${client.client_name} </b><br> ${client.client_address}`,
+            html: `Group : <b>${group.group_name} </b>`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -74,36 +75,34 @@ export default {
             confirmButtonText: 'Yes, delete it!'
          }).then(result => {
             if (result.isConfirmed) {
-               removeClient(client);
+               removeClient(group);
             }
          })
       }
 
 
-      function removeClient(client) {
-         clientAPI.delete(client.id)
+      function removeClient(group) {
+         apiHttp.delete(GROUP_ENDPOINT + "/" + group.id)
             .then(response => {
                createToast({
                   title: "Success",
-                  description: `Client ( ${client.client_name} ) has been deleted.`
+                  description: `Group : ( ${group.group_name} ) has been deleted.`
                }, {
                   type: "success",
-                  timeout: 3000
+                  timeout: 3000,
+                  position: 'top-center',
                });
                changePage(currentUrl.value);
             })
             .catch(errors => {
-               let { title, description } = ErrorHandler(errors)
-               createToast({ title, description }, {
-                  type: "danger",
-                  timeout: 10000,
-               });
+               let msg = errorHandler(errors);
+               createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
             });
       }
 
 
-      const editClient = (client) => {
-         router.push({ name: "UpdateClient", params: { id: client.id } });
+      const editClient = (group) => {
+         router.push({ name: "GroupUpdate", params: { id: group.id } });
       }
 
 
@@ -115,16 +114,13 @@ export default {
             nextPage += "&search=" + lookUp.value;
          }
 
-         clientAPI.changePage(nextPage)
+         apiHttp.get(nextPage)
             .then((response) => {
                store.dispatch("loadGroupList", response.data);
             })
             .catch((errors) => {
-               console.log("errors", errors);
-               createToast("Error : " + errors.response.message, {
-                  type: "danger",
-                  timeout: 10000,
-               });
+               let msg = errorHandler(errors);
+               createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
             });
       }
 
@@ -132,7 +128,6 @@ export default {
       const changePageLength = () => {
          options.params.paginate = rowCounts.value;
          options.params.search = lookUp.value;
-         console.log(options);
          getList();
       }
 
@@ -145,18 +140,13 @@ export default {
 
       const filterList = () => {
          options.params.search = lookUp.value;
-
-         console.log("options", options);
-         apiClient.get(GROUP_ENDPOINT, options)
+         apiHttp.get(GROUP_ENDPOINT, options)
             .then((response) => {
                store.dispatch("loadGroupList", response.data);
             })
             .catch((errors) => {
-               console.log("errors" + errors.message);
-               createToast("Error : " + errors.message, {
-                  type: "danger",
-                  timeout: 10000,
-               });
+               let msg = errorHandler(errors);
+               createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
             });
       }
 
@@ -192,8 +182,8 @@ export default {
          });
       }
 
-      const addNewClient = () => {
-         router.push({ name: "NewClient" });
+      const addNewGroup = () => {
+         router.push({ name: "GroupCreate" });
       }
 
 
@@ -214,7 +204,7 @@ export default {
             });
          } else {
             let url = GROUP_ENDPOINT + "/file/export";
-            apiClient.post(url, { selectedIds: selectedRows.value, exportType: exportTo.value }, { responseType: "blob" })
+            apiHttp.post(url, { selectedIds: selectedRows.value, exportType: exportTo.value }, { responseType: "blob" })
                .then((response) => {
                   const url = window.URL.createObjectURL(new Blob([response.data]));
                   const link = document.createElement("a");
@@ -223,7 +213,8 @@ export default {
                   link.click();
                })
                .catch((errors) => {
-                  console.log(errors);
+                  let msg = errorHandler(errors);
+                  createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
                });
          }
       }
@@ -242,7 +233,7 @@ export default {
          exportTo,
          ACTION_BUTTONS,
          filterList,
-         addNewClient,
+         addNewGroup,
          removeConfirmation,
          editClient,
          changePage,

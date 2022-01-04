@@ -12,6 +12,7 @@ import ExportTo from "../../components/ExportTo.vue";
 import Datatable from "@/components/Datatable";
 import AddIcon from '@/components/Icons/AddIcon';
 import Swal from 'sweetalert2'
+import errorHandler from "@/API/ErrorHandler";
 
 export default {
    components: { AddIcon, SearchInput, Pagination, PageLength, ExportTo, Datatable },
@@ -66,11 +67,8 @@ export default {
                store.dispatch("loadList", response.data);
             })
             .catch((errors) => {
-               console.log("errors vclinet", errors);
-               createToast("Error : " + errors.response.message, {
-                  type: "danger",
-                  timeout: 10000,
-               });
+               let msg = errorHandler(errors);
+               createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
             });
       }
 
@@ -104,11 +102,8 @@ export default {
                changePage(currentUrl.value);
             })
             .catch(errors => {
-               let { title, description } = ErrorHandler(errors)
-               createToast({ title, description }, {
-                  type: "danger",
-                  timeout: 10000,
-               });
+               let msg = errorHandler(errors);
+               createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
             });
       }
 
@@ -131,11 +126,8 @@ export default {
                store.dispatch("loadList", response.data);
             })
             .catch((errors) => {
-               console.log("errors", errors);
-               createToast("Error : " + errors.response.message, {
-                  type: "danger",
-                  timeout: 10000,
-               });
+               let msg = errorHandler(errors);
+               createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
             });
       }
 
@@ -174,11 +166,8 @@ export default {
                store.dispatch("loadList", response.data);
             })
             .catch((errors) => {
-               console.log("errors" + errors.message);
-               createToast("Error : " + errors.message, {
-                  type: "danger",
-                  timeout: 10000,
-               });
+               let msg = errorHandler(errors);
+               createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
             });
       }
 
@@ -247,7 +236,8 @@ export default {
                   link.click();
                })
                .catch((errors) => {
-                  console.log(errors);
+                  let msg = errorHandler(errors);
+                  createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
                });
          }
       }

@@ -2,7 +2,7 @@ import axios from "axios";
 
 import store from '@/store';
 
-export const apiClient = axios.create({
+export const apiHttp = axios.create({
    baseURL: process.env.VUE_APP_API_ENDPOINT,
    headers: {
       "X-Requested-With": "XMLHttpRequest"
@@ -10,7 +10,7 @@ export const apiClient = axios.create({
 });
 
 // Add a request interceptor
-apiClient.interceptors.request.use(function (config) {
+apiHttp.interceptors.request.use(function (config) {
    // Do something before request is sent
    let userToken = store.getters.getUserToken;
    if (userToken) {
@@ -23,7 +23,7 @@ apiClient.interceptors.request.use(function (config) {
 });
 
 // Add a response interceptor
-apiClient.interceptors.response.use(function (response) {
+apiHttp.interceptors.response.use(function (response) {
    // Any status code that lie within the range of 2xx cause this function to trigger
    // Do something with response data
    return response;
