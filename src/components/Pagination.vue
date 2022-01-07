@@ -11,6 +11,9 @@
           bg-gray-300
           rounded-md
           dark:bg-gray-800 dark:text-gray-700
+          h-12
+          text-lg
+          w-auto
         "
         @click="changePage(page.url)"
         v-bind:disabled="page.active || page.url == null"
@@ -19,14 +22,8 @@
           page.url == null
             ? 'cursor-not-allowed text-gray-400'
             : page.active
-            ? 'bg-yellow-700 text-white cursor-not-allowed'
+            ? 'bg-yellow-700 text-white cursor-not-allowed font-semibold'
             : 'text-gray-800 hover:bg-yellow-600  dark:hover:bg-yellow-500  hover:text-white  dark:hover:text-gray-200'
-        "
-        v-if="
-          (pageLength > 10 && index < 4 && page.active == false) ||
-          page.active == true ||
-          (pageLength > 10 && index > 9 && page.active == false) ||
-          pageLength < 10
         "
       ></button>
     </div>

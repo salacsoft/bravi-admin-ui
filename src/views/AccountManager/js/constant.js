@@ -1,6 +1,6 @@
-export const COLUMNS = ["group_name"];
-export const TABLE_HEADERS = ["GROUP NAME"];
-export const GROUP_ENDPOINT = process.env.VUE_APP_API_URL + "/v1/groups";
+export const COLUMNS = ["account_code", "full_name", "mobile_no"];
+export const TABLE_HEADERS = ["Account Code", "Name", "Mobile no"];
+export const ACCOUNT_MANAGER_ENDPOINT = process.env.VUE_APP_API_URL + "/v1/account-managers";
 export const ACTION_BUTTONS = [{
    icon: "EditIcon",
    color: "text-white",
@@ -17,7 +17,7 @@ export const API_OPTION = {
    params: {
       paginate: 10,
       search: "",
-      orderBy: "group_name",
+      orderBy: "first_name",
    }
 };
 
