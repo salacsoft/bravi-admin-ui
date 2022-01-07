@@ -96,7 +96,7 @@
                   : 'bg-white'
               "
             >
-              <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+              <td class="px-6 py-2 whitespace-no-wrap border-b border-gray-200">
                 <label>
                   <input
                     type="checkbox"
@@ -109,7 +109,7 @@
                 </label>
               </td>
               <td
-                class="px-6 py-4 whitespace-no-wrap border-b border-gray-200"
+                class="px-6 py-2 whitespace-no-wrap border-b border-gray-200"
                 v-for="(column, index) in dataFields"
                 :key="index"
               >
@@ -118,7 +118,7 @@
               <td
                 class="
                   px-6
-                  py-4
+                  py-2
                   space-x-4
                   text-sm
                   leading-5

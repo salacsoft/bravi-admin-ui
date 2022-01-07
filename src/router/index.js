@@ -5,6 +5,7 @@ import Login from '@/views/Auth/Login.vue'
 import ForgotPassword from '@/views/Auth/Forgot-Password.vue'
 import ClientRoutes from './client-routes'
 import GroupRoutes from '@/views/Group/js/route';
+import AccountManagerRoutes from '@/views/AccountManager/js/route';
 
 
 const routes = [
@@ -13,13 +14,9 @@ const routes = [
     name: 'Main',
     component: Main,
     children: [
-      {
-        path: 'about',
-        name: 'About',
-        component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-      },
       ...ClientRoutes,
-      ...GroupRoutes
+      ...GroupRoutes,
+      ...AccountManagerRoutes
     ]
   },
   {

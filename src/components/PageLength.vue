@@ -1,5 +1,5 @@
 <template>
-  <div class="space-x-2">
+  <div class="space-x-2 tracking-wider">
     <label for="cars">Page length:</label>
     <select
       name="pagelength"

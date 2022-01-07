@@ -7,7 +7,7 @@
           items-center
           justify-between
           w-full
-          h-24
+          h-20
           bg-yellow-300
           shadow-md
           px-6
@@ -15,8 +15,8 @@
         "
       >
         <div>
-          <h1 class="text-2xl md:text-4xl">{{ title }}</h1>
-          <p class="text-sm tracking-wider">{{ subTitle }}</p>
+          <h1 class="text-2xl md:text-2xl">{{ title }}</h1>
+          <p class="text-xs tracking-wider">{{ subTitle }}</p>
         </div>
         <div class="cursor-pointer" @click="back">
           <svg

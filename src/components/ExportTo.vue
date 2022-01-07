@@ -1,5 +1,5 @@
 <template>
-  <div class="space-x-2">
+  <div class="space-x-2 tracking-wider">
     <label for="cars">Export to:</label>
     <select
       class="py-2 px-3 rounded-lg"
