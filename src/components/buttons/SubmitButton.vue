@@ -7,7 +7,7 @@
       bg-blue-600
       rounded-xl
       text-gray-100
-      tracking-wider
+      tracking-widest
       hover:bg-blue-500
     "
   >

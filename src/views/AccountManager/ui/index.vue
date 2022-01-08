@@ -29,7 +29,7 @@
         <!-- pagination -->
         <div class="flex justify-end space-x-6">
           <div class="space-x-3">
-            <div class="flex space-x-4 text-xs">
+            <div class="flex space-x-4 text-xs" v-if="list.length">
               <page-length
                 :options="pageOptions"
                 v-model="rowCounts"

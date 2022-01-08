@@ -15,8 +15,8 @@
         "
       >
         <div>
-          <h1 class="text-2xl md:text-2xl">{{ title }}</h1>
-          <p class="text-xs tracking-wider">{{ subTitle }}</p>
+          <h1 class="text-xl md:text-2xl">{{ title }}</h1>
+          <p class="text-xs tracking-widest text-gray-600">{{ subTitle }}</p>
         </div>
         <div class="cursor-pointer" @click="back">
           <svg
