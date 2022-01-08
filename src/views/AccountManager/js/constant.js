@@ -17,7 +17,7 @@ export const API_OPTION = {
    params: {
       paginate: 10,
       search: "",
-      orderBy: "first_name",
+      orderBy: ["first_name", "middle_name", "last_name"],
    }
 };
 

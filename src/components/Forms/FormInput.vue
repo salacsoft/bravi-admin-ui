@@ -8,11 +8,12 @@
       py-2
       bg-white
       shadow-md
+      hover:border-gray-600
       focus:outline-none
       focus-within:shadow-lg
       rounded-lg
       border
-      focus-within:border-gray-400
+      focus-within:border-gray-600
     "
     :value="modelValue"
     @input="$emit('update:modelValue', $event.target.value)"
@@ -21,9 +22,7 @@
 
 <script>
 export default {
-  setup() {
-    return {};
-  },
+  setup() {},
   props: ["modelValue", "placeholder"],
 };
 </script>

@@ -34,19 +34,19 @@ export default {
          pageTitle.value = "Add new group"
          if (form.id) {
             pageTitle.value = "Edit group"
-            getGroup(form.id);
+            getRecord(form.id);
          }
       });
 
 
-      function submitGroup() {
+      function submit() {
          if (form.id == null)
-            saveGroup()
+            save()
          else
-            updateGroup()
+            update()
       }
 
-      function saveGroup() {
+      function save() {
          apiHttp.post(GROUP_ENDPOINT, toRaw(form))
             .then(response => {
                let newGroupName = response.data.data.group_name;
@@ -67,7 +67,7 @@ export default {
             })
       }
 
-      function updateGroup() {
+      function update() {
          apiHttp.patch(GROUP_ENDPOINT + "/" + form.id, form)
             .then(response => {
                let updatedGroupName = response.data.data.group_name;
@@ -88,7 +88,7 @@ export default {
             })
       }
 
-      function getGroup() {
+      function getRecord() {
          apiHttp.get(GROUP_ENDPOINT + "/" + form.id, toRaw(form))
             .then(response => {
                form.id = response.data.id;
@@ -100,6 +100,6 @@ export default {
             })
       }
 
-      return { form, submitGroup, router, pageTitle }
+      return { form, submit, router, pageTitle }
    }
 }

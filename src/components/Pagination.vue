@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex" v-if="pages.total > 0">
     <div v-for="(page, index) in pages.links" :key="index">
       <button
         class="

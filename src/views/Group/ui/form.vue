@@ -6,7 +6,7 @@
       class="mb-5"
     />
     <div
-      class="w-full max-w-4xl bg-gray-100 h-1/4 rounded-lg shadow-lg px-4 py-5"
+      class="w-full max-w-4xl bg-gray-100 h-1/3 rounded-lg shadow-lg px-4 py-5"
     >
       <form @submit.prevent="submitGroup" class="h-full">
         <div class="flex flex-col h-full justify-between">
@@ -21,7 +21,7 @@
               required
             />
           </div>
-          <div class="flex justify-end">
+          <div class="flex justify-end mb-4">
             <submit-button class="w-36 text-xl">Submit</submit-button>
           </div>
         </div>
