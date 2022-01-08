@@ -156,7 +156,7 @@
                   :key="index"
                 >
                   <button
-                    title="click to edit"
+                    :title="'click to ' + actionButton.action"
                     @click="$emit(actionButton.action, { ...row })"
                   >
                     <component

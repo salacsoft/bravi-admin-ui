@@ -12,9 +12,10 @@ import SubmitButton from '@/components/buttons/SubmitButton';
 import { apiHttp } from '@/API/httpService';
 import errorHandler from '@/API/ErrorHandler';
 import { createToast } from "mosha-vue-toastify";
+import _ from 'lodash'
 
 //CONSTANTS and VARIABLES
-import { GROUP_ENDPOINT } from './constant';
+import { ACCOUNT_MANAGER_ENDPOINT } from './constant';
 
 export default {
    components: { FormInput, PageTitle, SubmitButton },
@@ -36,20 +37,21 @@ export default {
 
       onMounted(() => {
          form.id = route.params.id || null;
-         pageTitle.value = "Add new group"
+         pageTitle.value = "Account Manager"
          if (form.id) {
-            pageTitle.value = "Edit group"
+            pageTitle.value = "Edit Account Manager"
             getRecord(form.id);
          }
       });
 
 
       function submitForm() {
-         // if (form.id == null)
-         //    save()
-         // else
-         //    update()
          console.log(form);
+         if (form.id == null)
+            save()
+         else
+            update()
+
       }
 
       function save() {
@@ -63,7 +65,7 @@ export default {
                   onClose: function () {
                      form.group_name = "";
                      form.id = null;
-                     router.push({ name: "Groups" });
+                     router.push({ name: "AccountManagers" });
                   }
                });
             })
@@ -74,17 +76,20 @@ export default {
       }
 
       function update() {
-         apiHttp.patch(GROUP_ENDPOINT + "/" + form.id, form)
+         apiHttp.patch(ACCOUNT_MANAGER_ENDPOINT + "/" + form.id, form)
             .then(response => {
-               let updatedGroupName = response.data.data.group_name;
-               createToast({ title: "Success", description: "Group updated to  " + updatedGroupName }, {
+               for (let item in form) {
+                  form[item] = response.data[item];
+               }
+               let amName = response.data.full_name;
+               createToast({ title: "Success", description: "Account manager updated to  " + amName }, {
                   type: "success",
                   timeout: 3000,
                   position: 'top-center',
                   onClose: function () {
-                     form.group_name = "";
+                     form.last_name = "";
                      form.id = null;
-                     router.push({ name: "Groups" });
+                     router.back();
                   }
                });
             })
@@ -94,13 +99,21 @@ export default {
             })
       }
 
+
+
       function getRecord() {
-         apiHttp.get(GROUP_ENDPOINT + "/" + form.id, toRaw(form))
+         apiHttp.get(ACCOUNT_MANAGER_ENDPOINT + "/" + form.id, toRaw(form))
             .then(response => {
-               form.id = response.data.id;
-               form.group_name = response.data.group_name;
+
+               // form = toRaw(response.data);
+               // console.log("form", form);
+               for (let item in form) {
+                  form[item] = response.data[item];
+               }
+
             })
             .catch(errors => {
+               console.log(errors);
                let msg = errorHandler(errors);
                createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
             })

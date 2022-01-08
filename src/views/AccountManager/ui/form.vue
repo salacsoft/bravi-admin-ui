@@ -20,6 +20,7 @@
                 placeholder="Enter a unique account code"
                 v-model.trim="form.account_code"
                 :class="{ 'border-red-500': false }"
+                required
               />
               <span v-if="false" class="text-xs text-red-600 tracking-widest"
                 >Please fill-up first name</span
@@ -32,6 +33,7 @@
               <form-input
                 placeholder="Enter first name"
                 v-model.trim="form.first_name"
+                required
               />
             </div>
             <div class="form-group">
@@ -44,12 +46,22 @@
               />
             </div>
             <div class="form-group">
+              <label for="Last name" class="text-sm tracking-wider"
+                >Last name</label
+              >
+              <form-input
+                placeholder="Enter last name"
+                v-model.trim="form.last_name"
+              />
+            </div>
+            <div class="form-group">
               <label for="Account pin" class="text-sm tracking-wider"
                 >Account pin</label
               >
               <form-input
                 placeholder="Enter account pin, It will be use to login on our PWA App"
                 v-model.trim="form.account_pin"
+                required
               />
             </div>
             <div class="form-group">
