@@ -104,13 +104,7 @@ export default {
       function getRecord() {
          apiHttp.get(ACCOUNT_MANAGER_ENDPOINT + "/" + form.id, toRaw(form))
             .then(response => {
-
-               // form = toRaw(response.data);
-               // console.log("form", form);
-               for (let item in form) {
-                  form[item] = response.data[item];
-               }
-
+               Object.assign(form, response.data);
             })
             .catch(errors => {
                console.log(errors);
