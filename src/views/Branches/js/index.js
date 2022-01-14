@@ -88,7 +88,7 @@ export default {
                });
                changePage(currentUrl.value);
             })
-            .catch(errors => {
+            .catch((errors) => {
                let msg = errorHandler(errors);
                createToast({ title: "ALERT", description: msg }, { type: "warning", timeout: 9000, position: "top-center" });
             });
