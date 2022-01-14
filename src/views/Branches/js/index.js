@@ -61,7 +61,7 @@ export default {
       const removeConfirmation = (branches) => {
          Swal.fire({
             title: 'Are you sure?',
-            html: `Account Manager : <b>${branches.branch_name} </b>`,
+            html: `Branch : <b>${branches.branch_name} </b>`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -80,7 +80,7 @@ export default {
             .then(response => {
                createToast({
                   title: "Success",
-                  description: `Account manager : ( ${branches.full_name} ) has been deleted.`
+                  description: `Branch : ( ${branches.branch_name} ) has been deleted.`
                }, {
                   type: "success",
                   timeout: 3000,
