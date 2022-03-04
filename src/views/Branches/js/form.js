@@ -1,51 +1,76 @@
 //LIBRARIES
-import { reactive, onMounted, ref, toRaw } from 'vue';
+import { reactive, onMounted, ref, toRaw, computed } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 
 
 //COMPONENTS
 import FormInput from '@/components/Forms/FormInput';
+import FormSelect from '@/components/Forms/FormSelect';
 import PageTitle from '@/components/PageTitle';
 import SubmitButton from '@/components/buttons/SubmitButton';
+
 
 //HELPERS
 import { apiHttp } from '@/API/httpService';
 import errorHandler from '@/API/ErrorHandler';
 import { createToast } from "mosha-vue-toastify";
-import _ from 'lodash'
+
 
 //CONSTANTS and VARIABLES
-import { ACCOUNT_MANAGER_ENDPOINT } from './constant';
+import { BRANCHES_ENDPOINT } from './constant';
+import { CLIENT_ENDPOINT } from '@/views/Client/js/constant';
 
 export default {
-   components: { FormInput, PageTitle, SubmitButton },
+   components: { FormInput, PageTitle, SubmitButton, FormSelect },
 
    setup() {
       const route = useRoute();
       const router = useRouter();
 
-      let pageTitle = ref("Group");
+      let pageTitle = ref("Branch");
+      let clientURL = CLIENT_ENDPOINT;
+
+
       let form = reactive({
-         account_code: "",
-         account_pin: "",
-         first_name: "",
-         last_name: "",
-         middle_name: "",
-         mobile_no: "",
+         code_client: null,
+         client_name: "",
+         client_code: "",
+         client_uuid: "",
+         branch_code: "",
+         branch_name: "",
+         branch_address: "",
          id: null
-      })
+      });
+
+      //Concatenate client code and client name to to display in client name field
+      form.code_client = computed(() => {
+         return form.client_code && form.client_name ? form.client_code + " - " + form.client_name : "";
+      });
+
 
       onMounted(() => {
          form.id = route.params.id || null;
-         pageTitle.value = "Account Manager"
+         pageTitle.value = "Branch"
          if (form.id) {
-            pageTitle.value = "Edit Account Manager"
+            pageTitle.value = "Edit Branch info."
             getRecord(form.id);
          }
       });
 
 
-      function submitForm() {
+
+      const selectFromList = (event) => {
+
+         let client = JSON.parse(event);
+         form.client_code = client.client_code;
+         form.client_name = client.client_name;
+         form.client_uuid = client.uuid
+
+      }
+
+
+
+      const submitForm = () => {
          console.log(form);
          if (form.id == null)
             save()
@@ -54,18 +79,18 @@ export default {
 
       }
 
-      function save() {
-         apiHttp.post(ACCOUNT_MANAGER_ENDPOINT, toRaw(form))
+      const save = () => {
+         apiHttp.post(BRANCHES_ENDPOINT, toRaw(form))
             .then(response => {
-               let newAm = response.data.full_name;
-               createToast({ title: "Success", description: "New Account manager saved " + newAm }, {
+
+               createToast({ title: "Success", description: "New Branch " + response.data.branch_name + " saved." }, {
                   type: "success",
-                  timeout: 3000,
+                  timeout: 4000,
                   position: 'top-center',
                   onClose: function () {
                      form.group_name = "";
                      form.id = null;
-                     router.push({ name: "AccountManagers" });
+                     router.push({ name: "Branches" });
                   }
                });
             })
@@ -75,16 +100,13 @@ export default {
             })
       }
 
-      function update() {
-         apiHttp.patch(ACCOUNT_MANAGER_ENDPOINT + "/" + form.id, form)
+      const update = () => {
+         apiHttp.patch(BRANCHES_ENDPOINT + "/" + form.id, form)
             .then(response => {
-               for (let item in form) {
-                  form[item] = response.data[item];
-               }
-               let amName = response.data.full_name;
-               createToast({ title: "Success", description: "Account manager updated to  " + amName }, {
+               Object.assign(form, response.data);
+               createToast({ title: "Success", description: "Branch  " + form.branch_name + "  successfully updated " }, {
                   type: "success",
-                  timeout: 3000,
+                  timeout: 4000,
                   position: 'top-center',
                   onClose: function () {
                      form.last_name = "";
@@ -101,8 +123,8 @@ export default {
 
 
 
-      function getRecord() {
-         apiHttp.get(ACCOUNT_MANAGER_ENDPOINT + "/" + form.id, toRaw(form))
+      const getRecord = () => {
+         apiHttp.get(BRANCHES_ENDPOINT + "/" + form.id, toRaw(form))
             .then(response => {
                Object.assign(form, response.data);
             })
@@ -113,6 +135,8 @@ export default {
             })
       }
 
-      return { form, submitForm, router, pageTitle }
+
+
+      return { form, submitForm, router, pageTitle, selectFromList, clientURL }
    }
 }

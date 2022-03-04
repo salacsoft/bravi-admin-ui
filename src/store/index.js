@@ -3,6 +3,7 @@ import AuthStore from './auth';
 import ClientStore from './clients';
 import GroupStore from '@/views/Group/js/store.js';
 import AccountManagerStore from '@/views/AccountManager/js/store.js';
+import BranchesStore from '@/views/Branches/js/store.js';
 import createPersistedState from "vuex-persistedstate";
 
 // import SecureLS from "secure-ls";
@@ -14,7 +15,8 @@ export default createStore({
     AuthStore,
     ClientStore,
     GroupStore,
-    AccountManagerStore
+    AccountManagerStore,
+    BranchesStore
   },
   plugins: [createPersistedState({
     storage: {

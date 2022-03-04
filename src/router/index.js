@@ -6,6 +6,7 @@ import ForgotPassword from '@/views/Auth/Forgot-Password.vue'
 import ClientRoutes from './client-routes'
 import GroupRoutes from '@/views/Group/js/route';
 import AccountManagerRoutes from '@/views/AccountManager/js/route';
+import BranchesRoutes from '@/views/Branches/js/route';
 
 
 const routes = [
@@ -15,6 +16,7 @@ const routes = [
     component: Main,
     children: [
       ...ClientRoutes,
+      ...BranchesRoutes,
       ...GroupRoutes,
       ...AccountManagerRoutes
     ]

@@ -23,20 +23,7 @@
                 text-gray-800
               "
             >
-              <th
-                class="
-                  px-6
-                  py-4
-                  text-xs
-                  font-medium
-                  leading-4
-                  tracking-wider
-                  text-left
-                  uppercase
-                  border-b border-gray-200
-                  flex-grow
-                "
-              >
+              <th class="header-style">
                 <label>
                   <input
                     type="checkbox"
@@ -47,38 +34,13 @@
                 </label>
               </th>
               <th
-                class="
-                  px-6
-                  py-4
-                  text-lg
-                  font-medium
-                  leading-4
-                  tracking-wider
-                  text-left
-                  uppercase
-                  border-b border-gray-200
-                  flex-grow
-                "
+                class="header-style"
                 v-for="(header, index) in dataHeaders"
                 :key="index"
               >
                 {{ header }}
               </th>
-              <th
-                class="
-                  px-6
-                  py-4
-                  text-lg
-                  font-medium
-                  leading-4
-                  tracking-wider
-                  text-left
-                  uppercase
-                  border-b border-gray-200
-                  flex-grow
-                "
-                v-if="haveActionButton == 'true'"
-              >
+              <th class="header-style" v-if="haveActionButton == 'true'">
                 Action
               </th>
             </tr>
@@ -109,7 +71,7 @@
             <tr
               v-for="(row, index) in data"
               :key="row[id]"
-              class="hover:bg-yellow-50 text-sm"
+              class="hover:bg-yellow-50 text-sm border-b border-gray-200"
               :class="
                 modelValue.includes(row[id])
                   ? 'bg-yellow-100'
@@ -118,7 +80,7 @@
                   : 'bg-white'
               "
             >
-              <td class="px-6 py-2 whitespace-no-wrap border-b border-gray-200">
+              <td class="px-6 py-2 whitespace-no-wrap">
                 <label>
                   <input
                     type="checkbox"
@@ -131,7 +93,7 @@
                 </label>
               </td>
               <td
-                class="px-6 py-2 whitespace-no-wrap border-b border-gray-200"
+                class="px-6 py-2 whitespace-no-wrap"
                 v-for="(column, index) in dataFields"
                 :key="index"
               >
@@ -146,7 +108,6 @@
                   leading-5
                   text-gray-500
                   whitespace-no-wrap
-                  border-b border-gray-200
                   flex
                 "
                 v-if="haveActionButton"
@@ -175,7 +136,7 @@
 </template>
 
 <script>
-import { watch, ref } from "vue";
+import { watch } from "vue";
 import EditIcon from "@/components/Icons/EditIcon";
 import RemoveIcon from "@/components/Icons/RemoveIcon";
 import EyeIcon from "@/components/Icons/EyeIcon";
@@ -231,5 +192,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
+.header-style {
+  @apply px-6 py-4  text-lg font-medium  leading-4  tracking-wider  text-left  uppercase  flex-grow;
+}
 </style>

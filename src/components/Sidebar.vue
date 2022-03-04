@@ -73,6 +73,36 @@
             rounded-lg
             px-4
             py-2
+            divide-solid
+            hover:border-r-2
+            hover:border-yellow-600
+            hover:bg-gray-600
+            hover:text-yellow-300
+          "
+        >
+          <router-link to="/branches" class="flex space-x-5">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+              />
+            </svg>
+            <h1 class="hidden sm:hidden md:block text-lg">Braches</h1>
+          </router-link>
+        </div>
+        <div
+          class="
+            rounded-lg
+            px-4
+            py-2
             hover:border-l-2
             hover:border-yellow-600
             hover:bg-gray-600
